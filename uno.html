@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNO Game with AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="text-white min-h-screen flex flex-col">
+    <header class="bg-purple-dark-5 py-4 px-6 shadow-lg">
+      <div
+        class="container mx-auto flex justify-between items-center flex-wrap gap-2"
+      >
+        <h1
+          class="text-3xl font-bold bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500 bg-clip-text text-transparent"
+        >
+          UNO <span class="text-white">with AI</span>
+        </h1>
+        <div class="flex space-x-4">
+          <button
+            id="new-game-btn"
+            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition"
+          >
+            <i class="fas fa-redo mr-2"></i>New Game
+          </button>
+          <button
+            id="settings-btn"
+            class="bg-purple-dark-3 hover:bg-purple-800 px-4 py-2 rounded-lg font-semibold transition"
+          >
+            <i class="fas fa-cog mr-2"></i>Settings
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-6">
+      <div
+        class="flex justify-center items-center mb-6 bg-purple-dark-4 rounded-lg p-4 shadow"
+      >
+        <div class="text-center">
+          <h3 class="text-lg font-semibold">Current Player</h3>
+          <div
+            id="current-player"
+            class="text-xl mt-1 font-bold text-yellow-300"
+          >
+            You
+          </div>
+        </div>
+      </div>
+
+      <div class="relative mb-8">
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-dark-4 z-10 px-4 py-1 rounded-full shadow-lg"
+        >
+          <span class="font-semibold text-red-400">AI Cards</span>
+        </div>
+        <div
+          id="ai-cards"
+          class="bg-purple-dark-4 bg-opacity-50 rounded-xl p-6 flex gap-3 justify-center items-center h-32 border-2 border-gray-700"
+        >
+          <div
+            class="card w-16 h-24 bg-white rounded-lg flex flex-col items-center justify-center text-white text-center font-bold text-xl transition"
+          >
+            <div class="hidden">AI Card</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-white rounded-lg flex flex-col items-center justify-center text-white text-center font-bold text-xl transition"
+          >
+            <div class="hidden">AI Card</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-white rounded-lg flex flex-col items-center justify-center text-white text-center font-bold text-xl transition"
+          >
+            <div class="hidden">AI Card</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-white rounded-lg flex flex-col items-center justify-center text-white text-center font-bold text-xl transition"
+          >
+            <div class="hidden">AI Card</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-white rounded-lg flex flex-col items-center justify-center text-white text-center font-bold text-xl transition"
+          >
+            <div class="hidden">AI Card</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col-reverse sm:flex-row justify-between items-center mb-8 gap-8"
+      >
+        <div
+          id="player-stats"
+          class="bg-purple-dark-3 rounded-xl p-4 shadow-lg border-2 border-purple-500/30 w-48"
+        >
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-1"
+            >
+              <img
+                src="https://api.dicebear.com/6.x/avataaars/svg?seed=player1"
+                alt="Player 1"
+                class="w-full h-full rounded-full bg-purple-dark-4"
+              />
+            </div>
+
+            <div class="flex-1">
+              <h3
+                class="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+              >
+                Player 1
+              </h3>
+              <div class="flex items-center mt-1">
+                <i class="fas fa-cards text-yellow-400 mr-2"></i>
+                <span id="player-cards-count" class="text-xl font-bold">7</span>
+                <span class="text-sm text-gray-400 ml-1">cards</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-dark-4 px-3 py-1 rounded-full shadow-lg text-sm text-center z-10"
+          >
+            Discard Pile
+          </div>
+          <div
+            id="discard-pile"
+            class="w-24 h-36 rounded-lg flex items-center justify-center border-2 border-gray-600"
+          >
+            <div
+              id="current-card"
+              class="w-full h-full bg-red-500 rounded-lg flex flex-col items-center justify-center text-white font-bold text-2xl"
+            >
+              <div>1</div>
+            </div>
+          </div>
+
+          <div class="mt-2 text-center" id="draw-card-count-container">
+            <span class="font-semibold text-red-400">Draw Cards:</span>
+            <span id="draw-card-count" class="font-bold">0</span>
+          </div>
+        </div>
+
+        <div
+          id="ai-stats"
+          class="bg-purple-dark-3 rounded-xl p-4 shadow-lg border-2 border-purple-500/30 w-48"
+        >
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-yellow-600 p-1"
+            >
+              <img
+                src="https://api.dicebear.com/6.x/avataaars/svg?seed=ai1"
+                alt="AI Player"
+                class="w-full h-full rounded-full bg-purple-dark-4"
+              />
+            </div>
+
+            <div class="flex-1">
+              <h3
+                class="font-bold text-lg bg-gradient-to-r from-red-400 to-yellow-500 bg-clip-text text-transparent"
+              >
+                AI Player
+              </h3>
+              <div class="flex items-center mt-1">
+                <i class="fas fa-cards text-red-400 mr-2"></i>
+                <span id="ai-cards-count" class="text-xl font-bold">7</span>
+                <span class="text-sm text-gray-400 ml-1">cards</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <div
+          id="player-cards"
+          class="bg-purple-dark-4 bg-opacity-70 rounded-xl p-6 min-h-40 flex flex-wrap justify-center gap-3 border-2 border-gray-700"
+        >
+          <div
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-dark-4 z-10 px-4 py-1 rounded-full shadow-lg"
+          >
+            <span class="font-semibold text-red-400">Your Cards</span>
+          </div>
+
+          <div
+            class="card w-16 h-24 bg-red-500 rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl cursor-pointer transition card-hover"
+          >
+            <div>1</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-blue-500 rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl cursor-pointer transition card-hover"
+          >
+            <div>1</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-green-500 rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl cursor-pointer transition card-hover"
+          >
+            <div>1</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-yellow-500 rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl cursor-pointer transition card-hover"
+          >
+            <div>1</div>
+          </div>
+          <div
+            class="card w-16 h-24 bg-purple-dark-4 rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl cursor-pointer transition card-hover"
+          >
+            <div>1</div>
+          </div>
+        </div>
+
+        <div class="flex justify-center space-x-6 mt-6">
+          <button
+            id="draw-card-btn"
+            class="draw-button px-6 py-3 rounded-lg font-bold text-white flex items-center transition"
+          >
+            <i class="fas fa-plus-circle mr-2"></i> Draw Card
+          </button>
+          <button
+            id="skip-turn-btn"
+            class="skip-button px-6 py-3 rounded-lg font-bold text-white flex items-center transition"
+          >
+            <i class="fas fa-forward mr-2"></i> Skip Turn
+          </button>
+          <button
+            id="uno-btn"
+            class="hidden uno-button px-6 py-3 rounded-lg font-bold text-white flex items-center transition"
+          >
+            <i class="fas fa-circle-check mr-2"></i> UNO
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <div
+      id="game-message"
+      class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-dark-4 bg-opacity-90 p-6 rounded-xl shadow-2xl max-w-md text-center z-50 hidden"
+    >
+      <h3 class="text-2xl font-bold mb-4">Game Message</h3>
+      <p id="message-content" class="mb-6">This is a game message.</p>
+      <button
+        id="close-message-btn"
+        class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition"
+      >
+        OK
+      </button>
+    </div>
+
+    <div
+      id="wild-color-selector"
+      class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-purple-dark-4 bg-opacity-90 p-6 rounded-xl shadow-2xl z-50 hidden"
+    >
+      <div id="wildCardIndex" class="hidden"></div>
+      <h3 class="text-xl font-bold mb-4 text-center">Choose a Color</h3>
+      <div class="flex justify-center space-x-4">
+        <div
+          class="wild-color-selector w-16 h-16 bg-red-500 rounded-full cursor-pointer hover:opacity-90 transition"
+          data-color="red"
+        ></div>
+        <div
+          class="wild-color-selector w-16 h-16 bg-blue-500 rounded-full cursor-pointer hover:opacity-90 transition"
+          data-color="blue"
+        ></div>
+        <div
+          class="wild-color-selector w-16 h-16 bg-green-500 rounded-full cursor-pointer hover:opacity-90 transition"
+          data-color="green"
+        ></div>
+        <div
+          class="wild-color-selector w-16 h-16 bg-yellow-500 rounded-full cursor-pointer hover:opacity-90 transition"
+          data-color="yellow"
+        ></div>
+      </div>
+
+      <div class="mt-6 flex justify-center">
+        <button
+          id="cancel-wild-color"
+          class="bg-purple-dark-2 hover:bg-purple-800 px-6 py-3 rounded-lg font-semibold transition flex items-center"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="settings-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-purple-dark-4 rounded-xl p-6 w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">Game Settings</h2>
+
+        <div class="mb-6">
+          <label class="block text-lg font-semibold mb-2">AI Difficulty</label>
+          <select
+            id="ai-difficulty"
+            class="w-full bg-purple-dark-3 border border-gray-600 rounded-lg p-2 text-white"
+          >
+            <option value="easy" class="bg-purple-900 hover:bg-purple-800">
+              Easy
+            </option>
+            <option
+              value="medium"
+              class="bg-purple-900 hover:bg-purple-800"
+              selected
+            >
+              Medium
+            </option>
+            <option value="hard" class="bg-purple-900 hover:bg-purple-800">
+              Hard
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-lg font-semibold mb-2">Starting Cards</label>
+          <select
+            id="starting-cards"
+            class="w-full bg-purple-dark-3 border border-gray-600 rounded-lg p-2 text-white"
+          >
+            <option value="5" class="bg-purple-900 hover:bg-purple-800">
+              5 Cards
+            </option>
+            <option
+              value="7"
+              class="bg-purple-900 hover:bg-purple-800"
+              selected
+            >
+              7 Cards
+            </option>
+            <option value="10" class="bg-purple-900 hover:bg-purple-800">
+              10 Cards
+            </option>
+          </select>
+        </div>
+
+        <div class="flex justify-between">
+          <button
+            id="cancel-settings"
+            class="bg-purple-dark-2 hover:bg-purple-800 px-6 py-2 rounded-lg font-semibold transition"
+          >
+            Cancel
+          </button>
+          <button
+            id="save-settings"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-semibold transition"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="game-over-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-purple-dark-4 rounded-xl p-8 w-full max-w-md text-center">
+        <h2 class="text-3xl font-bold mb-4" id="game-over-title">Game Over!</h2>
+        <p class="text-xl mb-6" id="game-over-message">You won the game!</p>
+        <div class="flex justify-center">
+          <button
+            id="play-again-btn"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold text-lg transition"
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
