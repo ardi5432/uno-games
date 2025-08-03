@@ -1,0 +1,137 @@
+@keyframes cardDeal {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cardPlay {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.2) translateY(-50px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-purple-dark-1 {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.bg-purple-dark-2 {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.bg-purple-dark-3 {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.bg-purple-dark-4 {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.bg-purple-dark-5 {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.card-deal {
+  animation: cardDeal 0.5s ease-out forwards;
+}
+
+.card-play {
+  animation: cardPlay 0.5s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-20px);
+  transition: transform 0.2s ease;
+}
+
+.wild-color-selector {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.uno-button {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+}
+
+.uno-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
+}
+
+.draw-button {
+  background: linear-gradient(135deg, #4b6cb7, #182848);
+  box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4);
+}
+
+.draw-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(75, 108, 183, 0.6);
+}
+
+.skip-button {
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  box-shadow: 0 4px 15px rgba(255, 95, 109, 0.4);
+}
+
+.skip-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 95, 109, 0.6);
+}
+
+.card {
+  perspective: 1000px;
+}
+
+.card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: radial-gradient(circle, #e53935, #b71c1c);
+  border: 3px solid white;
+}
+
+.card-back-pattern {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1) 10px,
+    rgba(255, 255, 255, 0.2) 10px,
+    rgba(255, 255, 255, 0.2) 20px
+  );
+}
